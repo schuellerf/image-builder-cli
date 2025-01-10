@@ -47,7 +47,7 @@ GOLANGCI_COMPOSER_IMAGE=composer_golangci
 #         pre-fetched but evaluated at time of use.
 #
 
-VERSION := $(shell ( git describe --tags --abbrev=0 2>/dev/null || echo v1 ) | sed 's|v||')
+VERSION := $(shell ( git describe --tags 2>/dev/null || echo v1 ) | sed -e 's|v||' -e 's/-/./g')
 COMMIT = $(shell (cd "$(SRCDIR)" && git rev-parse HEAD))
 PACKAGE_NAME_VERSION = image-builder-cli-$(VERSION)
 PACKAGE_NAME_COMMIT = image-builder-cli-$(COMMIT)
@@ -189,3 +189,6 @@ release_artifacts: $(RPM_TARBALL_VERSIONED)
 
 lint:
 	pre-commit run --all
+
+show-version:  ## Show the generated version to be reused in tools like `.packit.yaml`
+	@echo "$(VERSION)"
